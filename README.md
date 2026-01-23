@@ -45,3 +45,70 @@ uvicorn 20jan:app --reload
 # The API is now available at http://127.0.0.1:8000
 # Automatic Docs (Swagger UI): http://127.0.0.1:8000/docs
 ```
+
+---
+
+## 📅 21st January 2026: Multi-LLM Chatbot with Gradio
+
+### 🎓 What was Taught
+We built a **Context-Aware Chatbot** that can switch between different Large Language Models (LLMs) like **Groq (Llama 3)**, **Gemini**, and **Phi**. The focus was on:
+- Building a modular backend to support multiple LLM providers.
+- Creating a modern, user-friendly frontend using **Gradio**.
+- Managing chat history and context for better conversational flow.
+
+### 🛠️ Implementation (`Jan21-MiniProject-LLM`)
+The project consists of a FastAPI backend and a Gradio frontend.
+
+**Key Components:**
+1.  **Backend (`backend/main.py`)**:
+    - Handles chat requests and routes them to the selected LLM service.
+    - Manages session state and context.
+2.  **Frontend (`frontend/app.py`)**:
+    - Built with **Gradio** for a clean chat interface.
+    - Connects to the backend via REST API.
+3.  **LLM Services (`backend/services/`)**:
+    - Modular integration for varying LLMs.
+
+### 🚀 Usage
+**Backend:**
+```bash
+cd Jan21-MiniProject-LLM/backend
+uvicorn main:app --reload --port 8003
+```
+
+**Frontend:**
+```bash
+cd Jan21-MiniProject-LLM/frontend
+python app.py
+```
+Access the chatbot at: `http://127.0.0.1:7860`
+
+---
+
+## 📅 22nd January 2026: LMS Backend (FastAPI & PostgreSQL)
+
+### 🎓 What was Taught
+We started building the backend for a comprehensive **Learning Management System (LMS)**. The lesson focused on professional database design and authentication foundations using **PostgreSQL** and **FastAPI**.
+- Setting up a **PostgreSQL** database with `sqlalchemy`.
+- Defining robust **Pydantic models** and **SQLAlchemy ORM models**.
+- Implementing user registration with field validations (Email, Username).
+
+### 🛠️ Implementation (`Jan22-FastAPI-Postgres`)
+We implemented the **User Management Module**.
+
+**Key Components:**
+1.  **Database Models (`models.py`)**:
+    - Defines the `User` table with fields: `id`, `email`, `username`, `password`, `first_name`, `last_name`, `phone_number`.
+    - Includes timestamps (`created_at`) and status (`is_active`).
+2.  **API Endpoints (`main.py`)**:
+    - `POST /users/`: Registers a new user, ensuring email and username uniqueness.
+    - `GET /users/{id}`: Retrieves user details.
+3.  **Schemas (`schemas.py`)**:
+    - Pydantic models for request validation (`UserCreate`) and response formatting (`UserResponse`).
+
+### 🚀 Usage
+```bash
+cd Jan22-FastAPI-Postgres
+uvicorn main:app --reload
+```
+API Docs: `http://127.0.0.1:8000/docs`
