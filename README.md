@@ -112,3 +112,33 @@ cd Jan22-FastAPI-Postgres
 uvicorn main:app --reload
 ```
 API Docs: `http://127.0.0.1:8000/docs`
+
+---
+
+## 📅 23rd January 2026: ML Model Deployment with FastAPI
+
+### 🎓 What was Taught
+We integrated **Machine Learning** with **FastAPI** to serve predictions via a REST API. We also built a frontend using **Gradio**.
+- Training a **Decision Tree Classifier** using `scikit-learn`.
+- Creating a **FastAPI** endpoint to serve model predictions.
+- Building a **Gradio** interface for interactive testing.
+
+### 🛠️ Implementation (`Jan23-ML-FastAPI`)
+We built an **Exoplanet Habitability Classifier**.
+
+**Key Components:**
+1.  **Model Training (`model_training.ipynb`)**:
+    - Trained a `DecisionTreeClassifier` on an Exoplanet dataset.
+    - Features: Distance (AU), Temperature (K), Pressure (atm), Water (%), Oxygen (%).
+2.  **API Service (`model-api.py`)**:
+    - `POST /predict`: Accepts exoplanet features and returns `"habitable"` or `"uninhabitable"`.
+3.  **Frontend (`model_training.ipynb`)**:
+    - A **Gradio** interface embedded in the notebook allows users to input features and see predictions instantly.
+
+### 🚀 Usage
+**Run the API:**
+```bash
+cd Jan23-ML-FastAPI
+uvicorn model-api:app --reload
+```
+API Docs: `http://127.0.0.1:8000/docs`
