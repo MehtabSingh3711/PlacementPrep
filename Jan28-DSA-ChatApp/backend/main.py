@@ -6,7 +6,7 @@ import json
 import asyncio
 from bson import ObjectId
 
-from database import user_collection, conversation_collection, message_collection
+from database import user_collection, conversation_collection, message_collection, client
 from models import UserCreate, UserInDB, MessageModel, ConversationModel
 from auth import get_password_hash, verify_password, create_access_token
 
@@ -14,11 +14,19 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://chitchat-bbms.vercel.app", "http://localhost:5173"],
+    allow_origin_regex="https://.*\.vercel\.app|http://localhost:.*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event("startup")
+async def startup_db_client():
+    try:
+        await client.admin.command('ping')
+        print("✅ MONGO CONNECTION SUCCESSFUL")
+    except Exception as e:
+        print(f"❌ MONGO CONNECTION FAILED: {e}")
 
 # --- WebSocket Manager ---
 class ConnectionManager:
