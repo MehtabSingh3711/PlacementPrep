@@ -142,3 +142,66 @@ cd Jan23-ML-FastAPI
 uvicorn model-api:app --reload
 ```
 API Docs: `http://127.0.0.1:8000/docs`
+
+---
+
+## 📅 27th January 2026: Data Structures & Algorithms (Arrays & Stacks)
+
+### 🎓 What was Taught
+We focused on fundamental Data Structures like **Arrays** and **Stacks**, understanding their memory models and practical applications.
+- Transitioning from Linked Lists to **Arrays** (Python Lists) for better performance and memory locality.
+- Implementing **Stack** operations (Push, Pop, Peek) and using them for features like Undo/Redo.
+- Building interactive **CLI Tools** and a **Web Interface** to demonstrate these concepts.
+
+### 🛠️ Implementation (`Jan27-Arrays-Stacks`)
+We built a multi-tool Flask application.
+
+**Key Components:**
+1.  **Student Management System**:
+    - Refactored from Linked Lists to Arrays.
+    - Supports adding students at the start/end, searching, and deleting by ID.
+2.  **Calculator with History**:
+    - A standard calculator that uses an **Array** to maintain a history of calculations.
+3.  **Text Editor**:
+    - Implements **Undo/Redo** functionality using two **Stacks** (`undo_stack` and `redo_stack`).
+
+### 🚀 Usage
+```bash
+cd Jan27-Arrays-Stacks
+python app.py
+```
+Access the tools at `http://127.0.0.1:5000`
+
+---
+
+## 📅 28th January 2026: Full-Stack Deployment (Chat App)
+
+### 🎓 What was Taught
+We learned the end-to-end process of **deploying a full-stack web application** to the cloud.
+- **Backend Deployment**: Hosting FastAPI on **Render**.
+- **Frontend Deployment**: Hosting a Vite-based frontend on **Vercel**.
+- **Production Readiness**: Handling `requirements.txt` dependencies, Environment Variables, and troubleshooting CORS & Database connections.
+
+### 🛠️ Implementation (`Jan28-DSA-ChatApp`)
+We built and deployed **ChitChat**, a real-time messaging application with a "Matcha Zen" aesthetic. [View Detailed Project README](./Jan28-DSA-ChatApp/README.md)
+
+**Key Components:**
+1.  **Backend (FastAPI)**:
+    - Uses **WebSockets** for real-time communication.
+    - Connects to **MongoDB** for persistent storage.
+2.  **Frontend (Vite + Tailwind)**:
+    - A responsive UI connected to the deployed backend.
+    - Features a custom theme with glassmorphism effects.
+
+### 🚀 Usage
+**Local Development:**
+```bash
+# Start Backend
+cd Jan28-DSA-ChatApp/backend
+uvicorn main:app --reload
+
+# Start Frontend
+cd Jan28-DSA-ChatApp/frontend
+npm install
+npm run dev
+```
