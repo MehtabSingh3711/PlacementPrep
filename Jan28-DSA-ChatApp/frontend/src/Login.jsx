@@ -30,7 +30,17 @@ const Login = () => {
         setError("Account created! Please log in.");
       }
     } catch (err) {
-      setError(err.response?.data?.detail || "Authentication failed");
+      console.error(err);
+      if (err.response?.data?.detail) {
+          const detail = err.response.data.detail;
+          if (Array.isArray(detail)) {
+              setError(detail.map(e => e.msg).join(', '));
+          } else {
+              setError(String(detail));
+          }
+      } else {
+          setError("Authentication failed");
+      }
     }
   };
 
