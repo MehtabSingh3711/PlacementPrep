@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Text Editor</h2>
+
+<form method="POST" action="{{ url_for('text_editor') }}">
+    <div style="display: flex; gap: 10px; margin-bottom: 20px; justify-content: center;">
+        <button type="submit" name="action" value="undo">⟲ Undo</button>
+        <button type="submit" name="action" value="redo">⟳ Redo</button>
+        <button type="submit" name="action" value="clear">Clear All</button>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <textarea name="text_input" rows="10" style="width: 100%; box-sizing: border-box;"
+            placeholder="Current text buffer...">{{ current_text }}</textarea>
+    </div>
+
+    <div style="text-align: center;">
+        <input type="text" name="append_text" placeholder="Type text to append..." style="width: 60%;">
+        <button type="submit" name="action" value="write">Write / Append</button>
+    </div>
+</form>
+
+<div class="history-box">
+    <h3>Status</h3>
+    <p><strong>Total Words:</strong> {{ current_text.split()|length }}</p>
+    <p><strong>Undo Stack Size:</strong> {{ undo_count }}</p>
+    <p><strong>Redo Stack Size:</strong> {{ redo_count }}</p>
+</div>
+{% endblock %}

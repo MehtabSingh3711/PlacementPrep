@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Calculator</h2>
+
+<form method="POST" action="{{ url_for('calculator') }}">
+    
+    <div class="calc-grid">
+        <input type="text" name="expression" class="calc-display" placeholder="" value="{{ expression|default('') }}" autofocus>
+        
+        <!-- Row 1 -->
+        <button type="submit" name="cmd" value="clear">C</button>
+        <button type="submit" name="cmd" value="div">/</button>
+        <button type="submit" name="cmd" value="mul">*</button>
+        <button type="submit" name="cmd" value="sub">-</button>
+
+        <!-- Row 2 -->
+        <button type="submit" name="cmd" value="7">7</button>
+        <button type="submit" name="cmd" value="8">8</button>
+        <button type="submit" name="cmd" value="9">9</button>
+        <button type="submit" name="cmd" value="add">+</button>
+
+        <!-- Row 3 -->
+        <button type="submit" name="cmd" value="4">4</button>
+        <button type="submit" name="cmd" value="5">5</button>
+        <button type="submit" name="cmd" value="6">6</button>
+        <button type="submit" name="cmd" value="pow">^</button>
+
+        <!-- Row 4 -->
+        <button type="submit" name="cmd" value="1">1</button>
+        <button type="submit" name="cmd" value="2">2</button>
+        <button type="submit" name="cmd" value="3">3</button>
+        <button type="submit" name="cmd" value="sqrt">√</button>
+
+        <!-- Row 5 -->
+        <button type="submit" name="cmd" value="0">0</button>
+        <button type="submit" name="cmd" value=".">.</button>
+        <button type="submit" name="cmd" value="calculate" style="grid-column: span 2;">=</button>
+    </div>
+    <div style="text-align:center; margin-top:10px;">
+        <small>Or type manually (e.g., 5 + 3) and press Enter/Calculate</small>
+    </div>
+</form>
+
+{% if result %}
+    <div class="alert alert-success" style="margin-top: 20px;">
+        <strong>Result:</strong> {{ result }}
+    </div>
+{% endif %}
+
+<div class="history-box">
+    <h3>History</h3>
+    {% if history %}
+        <ul>
+            {% for item in history %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No history yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

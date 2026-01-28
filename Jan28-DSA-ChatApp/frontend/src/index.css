@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#F4F1EA] text-[#2B2B2B] font-sans selection:bg-[#8FB359] selection:text-white;
+  }
+}
+
+@layer components {
+
+  /* Matcha Button */
+  .zen-button {
+    @apply relative bg-[#8FB359] text-white rounded-lg transition-all duration-300 font-bold overflow-hidden shadow-sm hover:bg-[#7A9C46] hover:shadow-md active:translate-y-0.5;
+  }
+
+  .zen-button-secondary {
+    @apply bg-white border border-[#E0Dcd0] text-[#2B2B2B] hover:bg-[#EAE7DF];
+  }
+
+  /* Input Field */
+  .zen-input {
+    @apply bg-white border border-[#E0Dcd0] rounded-lg px-4 py-2 outline-none text-[#2B2B2B] placeholder-[#9CA3AF] w-full transition-all duration-200 focus:border-[#8FB359] focus:ring-1 focus:ring-[#8FB359];
+  }
+
+  /* Nav Rail */
+  .nav-rail {
+    @apply w-16 bg-[#2B2B2B] flex flex-col items-center py-4 gap-4 text-[#9CA3AF];
+  }
+
+  .nav-item {
+    @apply p-3 rounded-xl transition-all hover:bg-white/10 hover:text-white cursor-pointer;
+  }
+
+  .nav-item.active {
+    @apply bg-[#8FB359] text-white shadow-lg;
+  }
+
+  /* Sidebar styling */
+  .zen-sidebar {
+    @apply bg-white border-r border-[#E0Dcd0] flex flex-col;
+  }
+}

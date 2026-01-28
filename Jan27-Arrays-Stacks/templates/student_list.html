@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h2>Student List Management</h2>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+
+    <!-- Add Student Form -->
+    <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+        <h3>Add Student</h3>
+        <form method="POST" action="{{ url_for('student_list') }}">
+            <input type="hidden" name="action" value="add">
+            <input type="number" name="student_id" placeholder="Student ID" required>
+            <input type="text" name="name" placeholder="Name" required>
+            <input type="text" name="grade" placeholder="Grade" required>
+            <div style="margin-top: 10px;">
+                <label><input type="radio" name="position" value="start" checked> Insert at Start</label>
+                <label><input type="radio" name="position" value="end"> Insert at End</label>
+            </div>
+            <button type="submit" style="width: 100%; margin-top: 10px;">Add Student</button>
+        </form>
+    </div>
+
+    <!-- Search/Delete Form -->
+    <div style="background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+        <h3>Actions</h3>
+        <form method="POST" action="{{ url_for('student_list') }}">
+            <input type="hidden" name="action" value="search">
+            <input type="number" name="student_id" placeholder="Enter ID to Search">
+            <button type="submit" style="width: 100%;">Search</button>
+        </form>
+        <hr style="border-color: rgba(255,255,255,0.1);">
+        <form method="POST" action="{{ url_for('student_list') }}">
+            <input type="hidden" name="action" value="delete">
+            <input type="number" name="student_id" placeholder="Enter ID to Delete">
+            <button type="submit" style="width: 100%; background-color: #b71c1c;">Delete</button>
+        </form>
+    </div>
+</div>
+
+<!-- Search Result -->
+{% if search_result %}
+<div class="alert alert-success" style="margin-top: 20px;">
+    <strong>Found:</strong> ID: {{ search_result.student_id }}, Name: {{ search_result.name }}, Grade: {{
+    search_result.grade }}
+</div>
+{% endif %}
+
+<!-- List Display -->
+<div class="history-box" style="margin-top: 20px; max-height: 400px;">
+    <h3>All Students ({{ students|length }})</h3>
+    {% if students %}
+    <ul>
+        {% for student in students %}
+        <li>
+            <span><strong>{{ student.student_id }}</strong>: {{ student.name }}</span>
+            <span style="background: rgba(255, 255, 255, 0.2); padding: 2px 8px; border-radius: 4px;">{{ student.grade
+                }}</span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No students in the list.</p>
+    {% endif %}
+</div>
+{% endblock %}

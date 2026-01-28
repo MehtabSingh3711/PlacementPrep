@@ -1,0 +1,200 @@
+:root {
+    --text-color: #333;
+    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    
+    /* Default / Calculator Theme (Lilac) */
+    --theme-primary: #dcd6f7;
+    --theme-dark: #a6b1e1;
+    --bg-gradient: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5; /* Fallback */
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: background 0.5s ease;
+}
+
+/* Dynamic Themes */
+body.theme-calculator {
+    /* Lilac Theme */
+    background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+    --theme-glass: rgba(230, 230, 250, 0.4);
+    --btn-bg: #b39ddb;
+    --btn-hover: #9575cd;
+}
+
+body.theme-text_editor {
+    /* Sky Blue Theme */
+    background: linear-gradient(120deg, #89f7fe 0%, #66a6ff 100%);
+    --theme-glass: rgba(224, 255, 255, 0.4);
+    --btn-bg: #81d4fa;
+    --btn-hover: #4fc3f7;
+}
+
+body.theme-student_list {
+    /* Mint Theme */
+    background: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
+    --theme-glass: rgba(240, 255, 240, 0.4);
+    --btn-bg: #a5d6a7;
+    --btn-hover: #81c784;
+}
+
+.container {
+    width: 80%;
+    max-width: 1000px;
+    margin-top: 50px;
+    
+    /* Frosted Glass Effect */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background-color: var(--glass-bg); /* Use semi-transparent white */
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    padding: 30px;
+    box-shadow: var(--shadow);
+}
+
+h1, h2, h3 {
+    text-align: center;
+    color: #444;
+}
+
+/* Tabs Navigation */
+.tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.tab-link {
+    padding: 12px 25px;
+    margin: 0 5px;
+    text-decoration: none;
+    color: #555;
+    font-weight: 600;
+    border-radius: 12px 12px 0 0;
+    transition: all 0.3s ease;
+}
+
+.tab-link:hover {
+    background-color: rgba(255,255,255,0.4);
+}
+
+.tab-link.active {
+    background-color: var(--glass-bg);
+    color: #000;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.05);
+}
+
+/* Content Areas */
+.content-area {
+    padding: 10px;
+}
+
+/* Forms & Inputs */
+input, select, textarea {
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(255, 255, 255, 0.6);
+    color: #333;
+    margin: 5px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+input:focus, textarea:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(0,0,0,0.2);
+}
+
+button {
+    cursor: pointer;
+    background-color: var(--btn-bg);
+    color: #fff; /* White text usually looks good on these pastels */
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: background 0.3s, transform 0.1s;
+    font-weight: bold;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+button:hover {
+    background-color: var(--btn-hover);
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+/* Lists and Tables */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    background: rgba(255, 255, 255, 0.5);
+    margin: 8px 0;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* Calculator Specific */
+.calc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    max-width: 350px;
+    margin: 0 auto;
+}
+
+.calc-display {
+    grid-column: span 4;
+    text-align: right;
+    font-size: 1.8em;
+    background: rgba(255,255,255,0.8);
+    margin-bottom: 15px;
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.history-box {
+    margin-top: 25px;
+    background: rgba(255,255,255,0.3);
+    padding: 15px;
+    border-radius: 12px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+/* Alerts */
+.alert {
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: 500;
+}
+.alert-error { background-color: rgba(255, 82, 82, 0.2); color: #d32f2f; }
+.alert-success { background-color: rgba(105, 240, 174, 0.2); color: #2e7d32; }
+.alert-info { background-color: rgba(68, 138, 255, 0.2); color: #1565c0; }
+.alert-warning { background-color: rgba(255, 215, 64, 0.2); color: #f57f17; }

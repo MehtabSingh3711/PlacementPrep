@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Tools CLI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="theme-{{ active_tab }}">
+
+    <div class="container">
+        <h1>Unified CLI Tools</h1>
+
+        <nav class="tabs">
+            <a href="{{ url_for('calculator') }}" class="tab-link {% if active_tab == 'calculator' %}active{% endif %}">Calculator</a>
+            <a href="{{ url_for('text_editor') }}" class="tab-link {% if active_tab == 'text_editor' %}active{% endif %}">Text Editor</a>
+            <a href="{{ url_for('student_list') }}" class="tab-link {% if active_tab == 'student_list' %}active{% endif %}">Student List</a>
+        </nav>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }}">{{ message }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <div class="content-area">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+
+</body>
+</html>

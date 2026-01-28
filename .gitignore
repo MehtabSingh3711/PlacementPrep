@@ -1,4 +1,3 @@
 SERVICE_ACCOUNT_FILE.json
 __pycache__
-.env
 credentials.json
