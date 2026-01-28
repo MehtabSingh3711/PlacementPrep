@@ -3,3 +3,4 @@ __pycache__
 .env
 credentials.json
 Jan20-FastAPI-GoogleSheets\SERVICE_ACCOUNT_FILE.json
+Jan21-MiniProject-LLM\credentials.json
