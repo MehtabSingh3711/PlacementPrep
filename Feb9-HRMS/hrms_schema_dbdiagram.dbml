@@ -1,0 +1,1032 @@
+// ============================================================================
+// HUMAN RESOURCE MANAGEMENT SYSTEM (HRMS) DATABASE SCHEMA
+// For dbdiagram.io - Database Diagram Tool
+// ============================================================================
+// This schema includes comprehensive HR functionality including:
+// - Employee Management
+// - Department & Organization Structure
+// - Attendance & Leave Management
+// - Payroll & Compensation
+// - Recruitment & Onboarding
+// - Performance Management
+// - Training & Development
+// - Benefits Administration
+// ============================================================================
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+Enum gender {
+  Male
+  Female
+  Other
+  "Prefer not to say"
+}
+
+Enum marital_status {
+  Single
+  Married
+  Divorced
+  Widowed
+}
+
+Enum employment_type {
+  "Full-time"
+  "Part-time"
+  Contract
+  Intern
+  Temporary
+}
+
+Enum employment_status {
+  Active
+  "On Leave"
+  Suspended
+  Terminated
+  Resigned
+}
+
+Enum attendance_status {
+  Present
+  Absent
+  Late
+  "Half-day"
+  "On Leave"
+  Holiday
+  Weekend
+}
+
+Enum leave_application_status {
+  Pending
+  Approved
+  Rejected
+  Cancelled
+}
+
+Enum payroll_status {
+  Draft
+  Processed
+  Paid
+  "On Hold"
+}
+
+Enum payment_method {
+  "Bank Transfer"
+  Check
+  Cash
+  Other
+}
+
+Enum bonus_status {
+  Pending
+  Approved
+  Paid
+  Rejected
+}
+
+Enum job_posting_status {
+  Open
+  Closed
+  "On Hold"
+}
+
+Enum application_status {
+  Applied
+  Screening
+  Interview
+  Offered
+  Rejected
+  Hired
+  Withdrawn
+}
+
+Enum interview_type {
+  Phone
+  Video
+  "In-person"
+  Technical
+  HR
+}
+
+Enum interview_status {
+  Scheduled
+  Completed
+  Cancelled
+  Rescheduled
+}
+
+Enum interview_result {
+  Selected
+  Rejected
+  "On Hold"
+}
+
+Enum task_status {
+  Pending
+  "In Progress"
+  Completed
+}
+
+Enum cycle_status {
+  Active
+  Completed
+  Cancelled
+}
+
+Enum review_status {
+  Draft
+  Submitted
+  Acknowledged
+  Completed
+}
+
+Enum goal_status {
+  "Not Started"
+  "In Progress"
+  Completed
+  Cancelled
+  "On Hold"
+}
+
+Enum priority {
+  Low
+  Medium
+  High
+  Critical
+}
+
+Enum training_type {
+  Internal
+  External
+  Online
+  Workshop
+  Certification
+}
+
+Enum training_status {
+  Scheduled
+  Ongoing
+  Completed
+  Cancelled
+}
+
+Enum enrollment_status {
+  Enrolled
+  Completed
+  Cancelled
+  "In Progress"
+}
+
+Enum benefit_status {
+  Active
+  Inactive
+  Pending
+  Cancelled
+}
+
+Enum asset_status {
+  Available
+  Assigned
+  "Under Repair"
+  Retired
+}
+
+Enum asset_condition {
+  New
+  Good
+  Fair
+  Poor
+}
+
+Enum severity {
+  "Verbal Warning"
+  "Written Warning"
+  Suspension
+  Termination
+}
+
+Enum payment_frequency {
+  Monthly
+  "Bi-weekly"
+  Weekly
+}
+
+// ============================================================================
+// CORE ORGANIZATION STRUCTURE
+// ============================================================================
+
+Table departments {
+  department_id int [pk, increment]
+  department_name varchar(100) [not null]
+  department_code varchar(20) [unique, not null]
+  parent_department_id int
+  manager_id int
+  budget decimal(15,2)
+  location varchar(100)
+  description text
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    parent_department_id
+  }
+}
+
+Table job_positions {
+  position_id int [pk, increment]
+  position_title varchar(100) [not null]
+  position_code varchar(20) [unique, not null]
+  department_id int [not null, ref: > departments.department_id]
+  job_level varchar(50)
+  min_salary decimal(12,2)
+  max_salary decimal(12,2)
+  job_description text
+  requirements text
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    department_id
+  }
+}
+
+// ============================================================================
+// EMPLOYEE MANAGEMENT
+// ============================================================================
+
+Table employees {
+  employee_id int [pk, increment]
+  employee_code varchar(20) [unique, not null]
+  first_name varchar(50) [not null]
+  last_name varchar(50) [not null]
+  middle_name varchar(50)
+  email varchar(100) [unique, not null]
+  phone varchar(20)
+  mobile varchar(20)
+  date_of_birth date
+  gender gender
+  marital_status marital_status
+  nationality varchar(50)
+  national_id varchar(50)
+  passport_number varchar(50)
+  
+  // Employment Details
+  department_id int [not null, ref: > departments.department_id]
+  position_id int [not null, ref: > job_positions.position_id]
+  manager_id int [ref: > employees.employee_id]
+  employment_type employment_type
+  employment_status employment_status
+  date_of_joining date [not null]
+  date_of_leaving date
+  probation_end_date date
+  
+  // Contact Information
+  current_address text
+  permanent_address text
+  city varchar(100)
+  state varchar(100)
+  country varchar(100)
+  postal_code varchar(20)
+  
+  // Emergency Contact
+  emergency_contact_name varchar(100)
+  emergency_contact_relationship varchar(50)
+  emergency_contact_phone varchar(20)
+  
+  // System Fields
+  profile_picture varchar(255)
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
+  created_by int
+  
+  indexes {
+    department_id
+    position_id
+    manager_id
+    employment_status
+    email
+  }
+}
+
+Table employee_education {
+  education_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  degree varchar(100) [not null]
+  institution varchar(200) [not null]
+  field_of_study varchar(100)
+  start_date date
+  end_date date
+  grade_gpa varchar(20)
+  country varchar(100)
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+  }
+}
+
+Table employee_experience {
+  experience_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  company_name varchar(200) [not null]
+  job_title varchar(100) [not null]
+  start_date date [not null]
+  end_date date
+  responsibilities text
+  country varchar(100)
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+  }
+}
+
+Table employee_documents {
+  document_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  document_type varchar(50) [not null]
+  document_name varchar(200) [not null]
+  file_path varchar(255) [not null]
+  file_size int
+  uploaded_by int
+  upload_date timestamp [default: `CURRENT_TIMESTAMP`]
+  expiry_date date
+  notes text
+  
+  indexes {
+    employee_id
+  }
+}
+
+// ============================================================================
+// ATTENDANCE MANAGEMENT
+// ============================================================================
+
+Table work_schedules {
+  schedule_id int [pk, increment]
+  schedule_name varchar(100) [not null]
+  monday_start time
+  monday_end time
+  tuesday_start time
+  tuesday_end time
+  wednesday_start time
+  wednesday_end time
+  thursday_start time
+  thursday_end time
+  friday_start time
+  friday_end time
+  saturday_start time
+  saturday_end time
+  sunday_start time
+  sunday_end time
+  total_hours_per_week decimal(4,2)
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table employee_schedules {
+  assignment_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  schedule_id int [not null, ref: > work_schedules.schedule_id]
+  effective_from date [not null]
+  effective_to date
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+    schedule_id
+  }
+}
+
+Table attendance {
+  attendance_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  attendance_date date [not null]
+  check_in time
+  check_out time
+  work_hours decimal(4,2)
+  overtime_hours decimal(4,2) [default: 0]
+  status attendance_status [default: 'Present']
+  location varchar(100)
+  notes text
+  approved_by int
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+    attendance_date
+    status
+    (employee_id, attendance_date) [unique]
+  }
+}
+
+// ============================================================================
+// LEAVE MANAGEMENT
+// ============================================================================
+
+Table leave_types {
+  leave_type_id int [pk, increment]
+  leave_name varchar(100) [not null]
+  leave_code varchar(20) [unique, not null]
+  days_per_year int
+  is_paid boolean [default: true]
+  carry_forward_allowed boolean [default: false]
+  max_carry_forward_days int
+  requires_approval boolean [default: true]
+  description text
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table employee_leave_balance {
+  balance_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  leave_type_id int [not null, ref: > leave_types.leave_type_id]
+  year int [not null]
+  total_days decimal(5,2) [not null]
+  used_days decimal(5,2) [default: 0]
+  remaining_days decimal(5,2) [not null]
+  carried_forward decimal(5,2) [default: 0]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+    leave_type_id
+    (employee_id, leave_type_id, year) [unique]
+  }
+}
+
+Table leave_applications {
+  leave_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  leave_type_id int [not null, ref: > leave_types.leave_type_id]
+  start_date date [not null]
+  end_date date [not null]
+  total_days decimal(5,2) [not null]
+  reason text [not null]
+  status leave_application_status [default: 'Pending']
+  applied_on timestamp [default: `CURRENT_TIMESTAMP`]
+  approved_by int [ref: > employees.employee_id]
+  approved_on timestamp
+  rejection_reason text
+  comments text
+  
+  indexes {
+    employee_id
+    status
+    (start_date, end_date)
+  }
+}
+
+// ============================================================================
+// PAYROLL & COMPENSATION
+// ============================================================================
+
+Table salary_structure {
+  structure_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  effective_from date [not null]
+  effective_to date
+  
+  // Base Salary Components
+  basic_salary decimal(12,2) [not null]
+  house_rent_allowance decimal(12,2) [default: 0]
+  transport_allowance decimal(12,2) [default: 0]
+  medical_allowance decimal(12,2) [default: 0]
+  special_allowance decimal(12,2) [default: 0]
+  other_allowances decimal(12,2) [default: 0]
+  
+  // Deductions
+  provident_fund decimal(12,2) [default: 0]
+  professional_tax decimal(12,2) [default: 0]
+  income_tax decimal(12,2) [default: 0]
+  insurance decimal(12,2) [default: 0]
+  other_deductions decimal(12,2) [default: 0]
+  
+  // Totals
+  gross_salary decimal(12,2) [not null]
+  total_deductions decimal(12,2) [default: 0]
+  net_salary decimal(12,2) [not null]
+  
+  currency varchar(10) [default: 'USD']
+  payment_frequency payment_frequency [default: 'Monthly']
+  
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  created_by int
+  
+  indexes {
+    employee_id
+    effective_from
+  }
+}
+
+Table payroll {
+  payroll_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  pay_period_start date [not null]
+  pay_period_end date [not null]
+  payment_date date
+  
+  // Earnings
+  basic_salary decimal(12,2) [not null]
+  allowances decimal(12,2) [default: 0]
+  overtime_pay decimal(12,2) [default: 0]
+  bonuses decimal(12,2) [default: 0]
+  commissions decimal(12,2) [default: 0]
+  gross_pay decimal(12,2) [not null]
+  
+  // Deductions
+  tax_deductions decimal(12,2) [default: 0]
+  insurance_deductions decimal(12,2) [default: 0]
+  retirement_deductions decimal(12,2) [default: 0]
+  loan_deductions decimal(12,2) [default: 0]
+  other_deductions decimal(12,2) [default: 0]
+  total_deductions decimal(12,2) [default: 0]
+  
+  // Net Pay
+  net_pay decimal(12,2) [not null]
+  
+  // Status
+  status payroll_status [default: 'Draft']
+  payment_method payment_method
+  
+  notes text
+  processed_by int
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+    (pay_period_start, pay_period_end)
+    status
+  }
+}
+
+Table bonuses {
+  bonus_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  bonus_type varchar(50) [not null]
+  amount decimal(12,2) [not null]
+  bonus_date date [not null]
+  reason text
+  approved_by int [ref: > employees.employee_id]
+  status bonus_status [default: 'Pending']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+  }
+}
+
+// ============================================================================
+// RECRUITMENT & ONBOARDING
+// ============================================================================
+
+Table job_postings {
+  posting_id int [pk, increment]
+  position_id int [not null, ref: > job_positions.position_id]
+  job_title varchar(100) [not null]
+  department_id int [not null, ref: > departments.department_id]
+  vacancies int [default: 1]
+  job_description text [not null]
+  requirements text
+  min_experience int
+  max_experience int
+  min_salary decimal(12,2)
+  max_salary decimal(12,2)
+  location varchar(100)
+  employment_type employment_type
+  posted_date date [not null]
+  closing_date date
+  status job_posting_status [default: 'Open']
+  posted_by int
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    position_id
+    department_id
+    status
+  }
+}
+
+Table job_applications {
+  application_id int [pk, increment]
+  posting_id int [not null, ref: > job_postings.posting_id]
+  first_name varchar(50) [not null]
+  last_name varchar(50) [not null]
+  email varchar(100) [not null]
+  phone varchar(20) [not null]
+  current_company varchar(200)
+  current_position varchar(100)
+  total_experience int
+  expected_salary decimal(12,2)
+  notice_period int
+  resume_path varchar(255)
+  cover_letter text
+  status application_status [default: 'Applied']
+  applied_date timestamp [default: `CURRENT_TIMESTAMP`]
+  notes text
+  
+  indexes {
+    posting_id
+    status
+    email
+  }
+}
+
+Table interviews {
+  interview_id int [pk, increment]
+  application_id int [not null, ref: > job_applications.application_id]
+  interview_round varchar(50) [not null]
+  interview_type interview_type [not null]
+  scheduled_date date [not null]
+  scheduled_time time [not null]
+  duration_minutes int [default: 60]
+  interviewer_id int [ref: > employees.employee_id]
+  location varchar(100)
+  meeting_link varchar(255)
+  status interview_status [default: 'Scheduled']
+  feedback text
+  rating int [note: 'Rating 1-10']
+  result interview_result
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    application_id
+    interviewer_id
+  }
+}
+
+Table onboarding_tasks {
+  task_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  task_name varchar(200) [not null]
+  task_description text
+  assigned_to int [ref: > employees.employee_id]
+  due_date date
+  status task_status [default: 'Pending']
+  completion_date date
+  notes text
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+    assigned_to
+  }
+}
+
+// ============================================================================
+// PERFORMANCE MANAGEMENT
+// ============================================================================
+
+Table performance_cycles {
+  cycle_id int [pk, increment]
+  cycle_name varchar(100) [not null]
+  start_date date [not null]
+  end_date date [not null]
+  review_deadline date
+  status cycle_status [default: 'Active']
+  description text
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table performance_reviews {
+  review_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  reviewer_id int [not null, ref: > employees.employee_id]
+  cycle_id int [not null, ref: > performance_cycles.cycle_id]
+  review_date date [not null]
+  review_period_start date [not null]
+  review_period_end date [not null]
+  
+  // Ratings (1-5 scale)
+  technical_skills_rating int [note: 'Rating 1-5']
+  communication_rating int [note: 'Rating 1-5']
+  teamwork_rating int [note: 'Rating 1-5']
+  leadership_rating int [note: 'Rating 1-5']
+  productivity_rating int [note: 'Rating 1-5']
+  overall_rating decimal(3,2)
+  
+  strengths text
+  areas_for_improvement text
+  achievements text
+  goals_next_period text
+  reviewer_comments text
+  employee_comments text
+  
+  status review_status [default: 'Draft']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+    reviewer_id
+    cycle_id
+  }
+}
+
+Table employee_goals {
+  goal_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  goal_title varchar(200) [not null]
+  goal_description text
+  category varchar(50)
+  start_date date [not null]
+  target_date date [not null]
+  completion_date date
+  progress_percentage int [default: 0, note: '0-100']
+  status goal_status [default: 'Not Started']
+  priority priority [default: 'Medium']
+  set_by int [ref: > employees.employee_id]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  updated_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+    set_by
+  }
+}
+
+// ============================================================================
+// TRAINING & DEVELOPMENT
+// ============================================================================
+
+Table training_programs {
+  program_id int [pk, increment]
+  program_name varchar(200) [not null]
+  program_code varchar(20) [unique, not null]
+  description text
+  trainer_name varchar(100)
+  training_type training_type
+  duration_hours int
+  start_date date
+  end_date date
+  location varchar(100)
+  max_participants int
+  cost_per_participant decimal(10,2)
+  status training_status [default: 'Scheduled']
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table training_enrollments {
+  enrollment_id int [pk, increment]
+  program_id int [not null, ref: > training_programs.program_id]
+  employee_id int [not null, ref: > employees.employee_id]
+  enrollment_date date [not null]
+  status enrollment_status [default: 'Enrolled']
+  completion_date date
+  score decimal(5,2)
+  certificate_issued boolean [default: false]
+  certificate_path varchar(255)
+  feedback text
+  approved_by int [ref: > employees.employee_id]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    program_id
+    employee_id
+  }
+}
+
+// ============================================================================
+// BENEFITS ADMINISTRATION
+// ============================================================================
+
+Table benefit_plans {
+  plan_id int [pk, increment]
+  plan_name varchar(100) [not null]
+  plan_type varchar(50) [not null]
+  provider varchar(100)
+  description text
+  employee_contribution decimal(10,2)
+  employer_contribution decimal(10,2)
+  coverage_amount decimal(12,2)
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table employee_benefits {
+  benefit_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  plan_id int [not null, ref: > benefit_plans.plan_id]
+  enrollment_date date [not null]
+  effective_from date [not null]
+  effective_to date
+  status benefit_status [default: 'Active']
+  beneficiary_name varchar(100)
+  beneficiary_relationship varchar(50)
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+    plan_id
+  }
+}
+
+// ============================================================================
+// ASSET MANAGEMENT
+// ============================================================================
+
+Table company_assets {
+  asset_id int [pk, increment]
+  asset_name varchar(100) [not null]
+  asset_type varchar(50) [not null]
+  asset_code varchar(50) [unique, not null]
+  serial_number varchar(100)
+  purchase_date date
+  purchase_price decimal(12,2)
+  warranty_expiry date
+  status asset_status [default: 'Available']
+  condition_status asset_condition
+  location varchar(100)
+  notes text
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table asset_assignments {
+  assignment_id int [pk, increment]
+  asset_id int [not null, ref: > company_assets.asset_id]
+  employee_id int [not null, ref: > employees.employee_id]
+  assigned_date date [not null]
+  return_date date
+  assigned_by int [ref: > employees.employee_id]
+  return_condition varchar(50)
+  notes text
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    asset_id
+    employee_id
+  }
+}
+
+// ============================================================================
+// EMPLOYEE RELATIONS
+// ============================================================================
+
+Table disciplinary_actions {
+  action_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  action_type varchar(50) [not null]
+  severity severity
+  incident_date date [not null]
+  description text [not null]
+  action_taken text [not null]
+  issued_by int [not null, ref: > employees.employee_id]
+  acknowledged_by_employee boolean [default: false]
+  acknowledgment_date date
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+    issued_by
+  }
+}
+
+Table exit_interviews {
+  exit_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  resignation_date date [not null]
+  last_working_date date [not null]
+  reason_for_leaving varchar(100)
+  feedback text
+  would_recommend_company boolean
+  would_consider_returning boolean
+  conducted_by int [ref: > employees.employee_id]
+  interview_date date
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+  }
+}
+
+// ============================================================================
+// SYSTEM & AUDIT
+// ============================================================================
+
+Table user_roles {
+  role_id int [pk, increment]
+  role_name varchar(50) [unique, not null]
+  description text
+  permissions json
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+}
+
+Table employee_system_access {
+  access_id int [pk, increment]
+  employee_id int [not null, ref: > employees.employee_id]
+  role_id int [not null, ref: > user_roles.role_id]
+  username varchar(50) [unique, not null]
+  password_hash varchar(255) [not null]
+  last_login timestamp
+  is_active boolean [default: true]
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    employee_id
+    role_id
+  }
+}
+
+Table audit_log {
+  log_id int [pk, increment]
+  user_id int [ref: > employees.employee_id]
+  action varchar(100) [not null]
+  table_name varchar(50)
+  record_id int
+  old_values json
+  new_values json
+  ip_address varchar(45)
+  user_agent varchar(255)
+  created_at timestamp [default: `CURRENT_TIMESTAMP`]
+  
+  indexes {
+    user_id
+    table_name
+  }
+}
+
+// ============================================================================
+// ADDITIONAL REFERENCES
+// ============================================================================
+
+Ref: departments.parent_department_id > departments.department_id
+Ref: departments.manager_id > employees.employee_id
+
+// ============================================================================
+// TABLE GROUPS FOR ORGANIZATION
+// ============================================================================
+
+TableGroup organization {
+  departments
+  job_positions
+}
+
+TableGroup employee_data {
+  employees
+  employee_education
+  employee_experience
+  employee_documents
+}
+
+TableGroup attendance_leave {
+  work_schedules
+  employee_schedules
+  attendance
+  leave_types
+  employee_leave_balance
+  leave_applications
+}
+
+TableGroup payroll_compensation {
+  salary_structure
+  payroll
+  bonuses
+}
+
+TableGroup recruitment {
+  job_postings
+  job_applications
+  interviews
+  onboarding_tasks
+}
+
+TableGroup performance {
+  performance_cycles
+  performance_reviews
+  employee_goals
+}
+
+TableGroup training {
+  training_programs
+  training_enrollments
+}
+
+TableGroup benefits {
+  benefit_plans
+  employee_benefits
+}
+
+TableGroup assets {
+  company_assets
+  asset_assignments
+}
+
+TableGroup employee_relations {
+  disciplinary_actions
+  exit_interviews
+}
+
+TableGroup system {
+  user_roles
+  employee_system_access
+  audit_log
+}
