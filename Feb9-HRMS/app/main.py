@@ -1,6 +1,5 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastview import FastView
 from app import models, database
 from app.routers import (
     auth, employees, admin, attendance, leave, 
@@ -18,8 +17,6 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
-FastView(app)
-
 # CORS
 origins = ["*"]
 app.add_middleware(
